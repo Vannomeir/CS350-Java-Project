@@ -1,0 +1,48 @@
+import java.util.Scanner;
+
+public class ExpenseTracker {
+
+    public static void main(String[] args) {
+
+        Scanner input = new Scanner(System.in);
+
+        double income = 0;
+        double totalExpenses = 0;
+        int choice;
+
+        do {
+
+            System.out.println("\n===== EXPENSE TRACKER =====");
+            System.out.println("1. Enter Income");
+            System.out.println("2. Add Expense");
+            System.out.println("3. View Expenses");
+            System.out.println("4. View Summary");
+            System.out.println("5. Exit");
+
+            System.out.print("Enter your choice: ");
+            choice = input.nextInt();
+
+            switch (choice) {
+             case 1:
+                    System.out.print("Enter your income: K");
+                    income = input.nextDouble();
+
+                    System.out.println("Income recorded successfully!");
+                    break;
+
+                case 2:
+                    input.nextLine();
+
+                    System.out.print("Enter expense name: ");
+                    String name = input.nextLine();
+
+                    System.out.print("Enter expense amount: K");
+                    double amount = input.nextDouble();
+
+                    expenseNames.add(name);
+                    expenseAmounts.add(amount);
+
+                    totalExpenses += amount;
+
+                    System.out.println("Expense added successfully!");
+                    break;
