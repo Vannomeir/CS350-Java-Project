@@ -3,14 +3,33 @@ import java.util.ArrayList;
 
 public class ExpenseTracker {
 
+    // Simple class to hold an expense's name and price together
+    public static class Expense {
+        private String name;
+        private double price;
+
+        public Expense(String name, double price) {
+            this.name = name;
+            this.price = price;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public double getPrice() {
+            return price;
+        }
+    }
+
     public static void main(String[] args) {
 
         Scanner input = new Scanner(System.in);
 
         double income = 0.0;
 
-        // ArrayList for storing expenses
-        ArrayList<Double> expenses = new ArrayList<>();
+        // ArrayList for storing expenses (now stores Expense objects, not just numbers)
+        ArrayList<Expense> expenses = new ArrayList<>();
 
         int choice;
 
@@ -73,28 +92,32 @@ public class ExpenseTracker {
     }
 
 
-    // Adds a new expense to the ArrayList
-    public static void addExpense(Scanner input, ArrayList<Double> expenses) {
+    // Adds a new expense (name + price) to the ArrayList
+    public static void addExpense(Scanner input, ArrayList<Expense> expenses) {
 
-        System.out.print("Enter your expense: ");
+        input.nextLine(); // clear the leftover newline from nextInt()/nextDouble()
 
-        double expense = input.nextDouble();
+        System.out.print("Enter expense name: ");
+        String name = input.nextLine();
 
-        expenses.add(expense);
+        System.out.print("Enter expense price: ");
+        double price = input.nextDouble();
+
+        expenses.add(new Expense(name, price));
 
         System.out.println("Expense added successfully.");
     }
 
 
     // Prints the income, expenses, and balance summary
-    public static void viewSummary(double income, ArrayList<Double> expenses) {
+    public static void viewSummary(double income, ArrayList<Expense> expenses) {
 
         double totalExpenses = 0.0;
 
         // Calculate total expenses
         for (int i = 0; i < expenses.size(); i++) {
 
-            totalExpenses += expenses.get(i);
+            totalExpenses += expenses.get(i).getPrice();
         }
 
         System.out.println("\n----- Expense Summary -----");
@@ -106,8 +129,10 @@ public class ExpenseTracker {
 
         for (int i = 0; i < expenses.size(); i++) {
 
+            Expense e = expenses.get(i);
+
             System.out.println(
-                "Expense " + (i + 1) + ": K" + expenses.get(i)
+                "Expense " + (i + 1) + ": " + e.getName() + " - K" + e.getPrice()
             );
         }
     }
