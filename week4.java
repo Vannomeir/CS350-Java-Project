@@ -1,5 +1,5 @@
-
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class ExpenseTracker {
 
@@ -9,11 +9,8 @@ public class ExpenseTracker {
 
         double income = 0.0;
 
-        // Array that can store up to 10 expenses
-        double[] expenses = new double[10];
-
-        // Keeps track of how many expenses have been entered
-        int expenseCount = 0;
+        // ArrayList for storing expenses
+        ArrayList<Double> expenses = new ArrayList<>();
 
         int choice;
 
@@ -28,18 +25,11 @@ public class ExpenseTracker {
                     break;
 
                 case 2:
-                    if (expenseCount < expenses.length) {
-                        expenses[expenseCount] = addExpense(input);
-                        expenseCount++;
-
-                        System.out.println("Expense added successfully.");
-                    } else {
-                        System.out.println("You have reached the maximum number of expenses.");
-                    }
+                    addExpense(input, expenses);
                     break;
 
                 case 3:
-                    viewSummary(income, expenses, expenseCount);
+                    viewSummary(income, expenses);
                     break;
 
                 case 4:
@@ -83,22 +73,28 @@ public class ExpenseTracker {
     }
 
 
-    // Prompts for and returns a new expense amount
-    public static double addExpense(Scanner input) {
+    // Adds a new expense to the ArrayList
+    public static void addExpense(Scanner input, ArrayList<Double> expenses) {
 
         System.out.print("Enter your expense: ");
-        return input.nextDouble();
+
+        double expense = input.nextDouble();
+
+        expenses.add(expense);
+
+        System.out.println("Expense added successfully.");
     }
 
 
     // Prints the income, expenses, and balance summary
-    public static void viewSummary(double income, double[] expenses, int expenseCount) {
+    public static void viewSummary(double income, ArrayList<Double> expenses) {
 
         double totalExpenses = 0.0;
 
-        // Add all expenses stored in the array
-        for (int i = 0; i < expenseCount; i++) {
-            totalExpenses += expenses[i];
+        // Calculate total expenses
+        for (int i = 0; i < expenses.size(); i++) {
+
+            totalExpenses += expenses.get(i);
         }
 
         System.out.println("\n----- Expense Summary -----");
@@ -108,8 +104,11 @@ public class ExpenseTracker {
 
         System.out.println("\nIndividual Expenses:");
 
-        for (int i = 0; i < expenseCount; i++) {
-            System.out.println("Expense " + (i + 1) + ": K" + expenses[i]);
+        for (int i = 0; i < expenses.size(); i++) {
+
+            System.out.println(
+                "Expense " + (i + 1) + ": K" + expenses.get(i)
+            );
         }
     }
 }
