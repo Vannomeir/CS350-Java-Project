@@ -24,3 +24,4 @@ The main goal of this project is to provide a simple tool for managing personal 
 # Members
 - Madalitso K. Kasongo 23136958
 - Kapeji Khonde	24170723
+- Frank Kafwita 17110607
