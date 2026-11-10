@@ -1,0 +1,251 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+/*
+ * WEEK 7: Inheritance and Method Overriding
+ * -----------------------------------------
+ * Expense is now a PARENT (super) class. Three CHILD (sub) classes extend it:
+ *   FoodExpense, TransportExpense, UtilityExpense
+ * Each child inherits name/price from Expense and OVERRIDES some methods
+ * so it behaves differently. Because every child IS-A Expense, they can all be
+ * stored in one ArrayList<Expense> (polymorphism).
+ */
+public class Week7_ExpenseTracker {
+
+    // ======================= PARENT CLASS =======================
+    public static class Expense {
+
+        private String name;
+        private double price;
+
+        public Expense(String name, double price) {
+            this.name = name;
+            this.price = price;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public double getPrice() {
+            return price;
+        }
+
+        // Methods below are meant to be OVERRIDDEN by child classes
+        public String getCategory() {
+            return "General";
+        }
+
+        public double getTotalCost() {
+            return price;
+        }
+
+        public String getDetails() {
+            return "No extra details";
+        }
+
+        // Overrides Object.toString()
+        @Override
+        public String toString() {
+            return "[" + getCategory() + "] " + name
+                    + " - K" + String.format("%.2f", getTotalCost())
+                    + " (" + getDetails() + ")";
+        }
+    }
+
+    // ======================= CHILD CLASS 1 =======================
+    public static class FoodExpense extends Expense {
+
+        private String mealType; // extra field only food expenses have
+
+        public FoodExpense(String name, double price, String mealType) {
+            super(name, price); // call the parent constructor
+            this.mealType = mealType;
+        }
+
+        @Override
+        public String getCategory() {
+            return "Food";
+        }
+
+        @Override
+        public String getDetails() {
+            return "Meal: " + mealType;
+        }
+    }
+
+    // ======================= CHILD CLASS 2 =======================
+    public static class TransportExpense extends Expense {
+
+        private double distanceKm;
+
+        public TransportExpense(String name, double price, double distanceKm) {
+            super(name, price);
+            this.distanceKm = distanceKm;
+        }
+
+        @Override
+        public String getCategory() {
+            return "Transport";
+        }
+
+        @Override
+        public String getDetails() {
+            return "Distance: " + distanceKm + " km";
+        }
+    }
+
+    // ======================= CHILD CLASS 3 =======================
+    public static class UtilityExpense extends Expense {
+
+        // VAT is added on top of the bill (change this rate if needed)
+        private static final double VAT_RATE = 0.16;
+
+        public UtilityExpense(String name, double price) {
+            super(name, price);
+        }
+
+        @Override
+        public String getCategory() {
+            return "Utility";
+        }
+
+        // Overrides the total: price PLUS VAT (uses super to reach the parent version)
+        @Override
+        public double getTotalCost() {
+            return super.getTotalCost() * (1 + VAT_RATE);
+        }
+
+        @Override
+        public String getDetails() {
+            return "Bill K" + String.format("%.2f", getPrice()) + " + 16% VAT";
+        }
+    }
+
+    // ======================= MAIN PROGRAM =======================
+    public static void main(String[] args) {
+
+        Scanner input = new Scanner(System.in);
+
+        double income = 0.0;
+
+        // Holds Expense objects AND any child objects (polymorphism)
+        ArrayList<Expense> expenses = new ArrayList<>();
+
+        int choice;
+
+        do {
+            printMenu();
+            choice = getChoice(input);
+
+            switch (choice) {
+
+                case 1:
+                    System.out.print("Enter your income: ");
+                    income = input.nextDouble();
+                    break;
+
+                case 2:
+                    addExpense(input, expenses);
+                    break;
+
+                case 3:
+                    viewSummary(income, expenses);
+                    break;
+
+                case 4:
+                    System.out.println("Exiting the Expense Tracker. Goodbye!");
+                    break;
+
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+
+        } while (choice != 4);
+
+        input.close();
+    }
+
+    public static void printMenu() {
+        System.out.println("\nExpense Tracker Menu (Week 7):");
+        System.out.println("1. Enter Income");
+        System.out.println("2. Add Expense");
+        System.out.println("3. View Summary");
+        System.out.println("4. Exit");
+    }
+
+    public static int getChoice(Scanner input) {
+        System.out.print("Enter your choice: ");
+        return input.nextInt();
+    }
+
+    // Asks for the expense type, then creates the matching child object
+    public static void addExpense(Scanner input, ArrayList<Expense> expenses) {
+
+        System.out.println("\nExpense Type:");
+        System.out.println("1. General");
+        System.out.println("2. Food");
+        System.out.println("3. Transport");
+        System.out.println("4. Utility (16% VAT added)");
+        System.out.print("Choose type: ");
+        int type = input.nextInt();
+        input.nextLine(); // clear leftover newline
+
+        System.out.print("Enter expense name: ");
+        String name = input.nextLine();
+
+        System.out.print("Enter expense price: ");
+        double price = input.nextDouble();
+        input.nextLine(); // clear leftover newline
+
+        Expense expense; // parent-type variable can hold any child object
+
+        switch (type) {
+
+            case 2:
+                System.out.print("Enter meal type (e.g. Breakfast, Lunch): ");
+                String mealType = input.nextLine();
+                expense = new FoodExpense(name, price, mealType);
+                break;
+
+            case 3:
+                System.out.print("Enter distance in km: ");
+                double distance = input.nextDouble();
+                expense = new TransportExpense(name, price, distance);
+                break;
+
+            case 4:
+                expense = new UtilityExpense(name, price);
+                break;
+
+            default:
+                expense = new Expense(name, price);
+        }
+
+        expenses.add(expense);
+        System.out.println("Expense added successfully.");
+    }
+
+    // Each getTotalCost()/toString() call runs the OVERRIDDEN version for that object
+    public static void viewSummary(double income, ArrayList<Expense> expenses) {
+
+        double totalExpenses = 0.0;
+
+        for (int i = 0; i < expenses.size(); i++) {
+            totalExpenses += expenses.get(i).getTotalCost();
+        }
+
+        System.out.println("\n----- Expense Summary -----");
+        System.out.println("Income: K" + String.format("%.2f", income));
+        System.out.println("Total Expenses: K" + String.format("%.2f", totalExpenses));
+        System.out.println("Balance: K" + String.format("%.2f", income - totalExpenses));
+
+        System.out.println("\nIndividual Expenses:");
+        if (expenses.isEmpty()) {
+            System.out.println("No expenses added yet.");
+        }
+        for (int i = 0; i < expenses.size(); i++) {
+            System.out.println((i + 1) + ". " + expenses.get(i));
+        }
+    }
+}
