@@ -1,0 +1,223 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+/*
+ * WEEK 6: Classes and Objects
+ * ---------------------------
+ * The Expense Tracker is now built from two real classes:
+ *   1. Expense - models ONE expense (fields, constructors, getters, setters)
+ *   2. Budget  - models the user's whole budget (income + a list of Expense objects)
+ * main() only creates objects and calls their methods.
+ */
+public class Week6_ExpenseTracker {
+
+    // ======================= CLASS 1: Expense =======================
+    public static class Expense {
+
+        // static field: ONE copy shared by ALL Expense objects
+        private static int expenseCount = 0;
+
+        // instance fields: each Expense object has its own copy
+        private int id;
+        private String name;
+        private double price;
+
+        // Constructor 1: name and price
+        public Expense(String name, double price) {
+            expenseCount++;
+            this.id = expenseCount;
+            this.name = name;
+            setPrice(price); // reuse the setter so validation is in one place
+        }
+
+        // Constructor 2 (overloaded): name only, price starts at 0
+        public Expense(String name) {
+            this(name, 0.0); // calls Constructor 1
+        }
+
+        // Getters (accessor methods)
+        public int getId() {
+            return id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public double getPrice() {
+            return price;
+        }
+
+        // Setters (mutator methods) with simple validation
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public void setPrice(double price) {
+            if (price < 0) {
+                System.out.println("Price cannot be negative. Setting price to K0.00.");
+                this.price = 0.0;
+            } else {
+                this.price = price;
+            }
+        }
+
+        // Static method: belongs to the class, not to any one object
+        public static int getExpenseCount() {
+            return expenseCount;
+        }
+
+        // Instance method: builds a one-line description of this expense
+        public String getSummaryLine() {
+            return "Expense " + id + ": " + name + " - K" + String.format("%.2f", price);
+        }
+    }
+
+    // ======================= CLASS 2: Budget =======================
+    public static class Budget {
+
+        private double income;
+        private ArrayList<Expense> expenses;
+
+        // Constructor 1: starts with no income
+        public Budget() {
+            this.income = 0.0;
+            this.expenses = new ArrayList<>();
+        }
+
+        // Constructor 2 (overloaded): starts with a given income
+        public Budget(double income) {
+            this.income = income;
+            this.expenses = new ArrayList<>();
+        }
+
+        public double getIncome() {
+            return income;
+        }
+
+        public void setIncome(double income) {
+            this.income = income;
+        }
+
+        // Adds an Expense OBJECT to the list
+        public void addExpense(Expense expense) {
+            expenses.add(expense);
+        }
+
+        public double getTotalExpenses() {
+            double total = 0.0;
+            for (int i = 0; i < expenses.size(); i++) {
+                total += expenses.get(i).getPrice();
+            }
+            return total;
+        }
+
+        public double getBalance() {
+            return income - getTotalExpenses();
+        }
+
+        // Returns the most expensive Expense object (or null if the list is empty)
+        public Expense getHighestExpense() {
+            if (expenses.isEmpty()) {
+                return null;
+            }
+            Expense highest = expenses.get(0);
+            for (int i = 1; i < expenses.size(); i++) {
+                if (expenses.get(i).getPrice() > highest.getPrice()) {
+                    highest = expenses.get(i);
+                }
+            }
+            return highest;
+        }
+
+        public void printSummary() {
+            System.out.println("\n----- Expense Summary -----");
+            System.out.println("Income: K" + String.format("%.2f", income));
+            System.out.println("Total Expenses: K" + String.format("%.2f", getTotalExpenses()));
+            System.out.println("Balance: K" + String.format("%.2f", getBalance()));
+
+            System.out.println("\nIndividual Expenses:");
+            if (expenses.isEmpty()) {
+                System.out.println("No expenses added yet.");
+            }
+            for (int i = 0; i < expenses.size(); i++) {
+                System.out.println(expenses.get(i).getSummaryLine());
+            }
+            System.out.println("\nTotal Expense objects created: " + Expense.getExpenseCount());
+        }
+    }
+
+    // ======================= MAIN PROGRAM =======================
+    public static void main(String[] args) {
+
+        Scanner input = new Scanner(System.in);
+
+        // Creating an OBJECT of the Budget class
+        Budget budget = new Budget();
+
+        int choice;
+
+        do {
+            printMenu();
+            choice = getChoice(input);
+
+            switch (choice) {
+
+                case 1:
+                    System.out.print("Enter your income: ");
+                    budget.setIncome(input.nextDouble());
+                    break;
+
+                case 2:
+                    input.nextLine(); // clear leftover newline
+                    System.out.print("Enter expense name: ");
+                    String name = input.nextLine();
+                    System.out.print("Enter expense price: ");
+                    double price = input.nextDouble();
+
+                    // Creating an OBJECT of the Expense class
+                    Expense newExpense = new Expense(name, price);
+                    budget.addExpense(newExpense);
+                    System.out.println("Expense added successfully.");
+                    break;
+
+                case 3:
+                    budget.printSummary();
+                    break;
+
+                case 4:
+                    Expense highest = budget.getHighestExpense();
+                    if (highest == null) {
+                        System.out.println("No expenses added yet.");
+                    } else {
+                        System.out.println("Highest expense -> " + highest.getSummaryLine());
+                    }
+                    break;
+
+                case 5:
+                    System.out.println("Exiting the Expense Tracker. Goodbye!");
+                    break;
+
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+
+        } while (choice != 5);
+
+        input.close();
+    }
+
+    public static void printMenu() {
+        System.out.println("\nExpense Tracker Menu (Week 6):");
+        System.out.println("1. Enter Income");
+        System.out.println("2. Add Expense");
+        System.out.println("3. View Summary");
+        System.out.println("4. View Highest Expense");
+        System.out.println("5. Exit");
+    }
+
+    public static int getChoice(Scanner input) {
+        System.out.print("Enter your choice: ");
+        return input.nextInt();
+    }
+}
