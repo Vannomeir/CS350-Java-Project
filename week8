@@ -1,0 +1,382 @@
+
+/*
+ * WEEK 8: INHERITANCE AND CONSTRUCTOR EXECUTION ORDER
+ * -------------------------------------------------
+ * Parent class: Person
+ * Child classes: Student and Employee
+ *
+ * Concepts demonstrated:
+ * 1. Inheritance
+ * 2. Encapsulation
+ * 3. Constructors
+ * 4. Constructor chaining using super()
+ * 5. Constructor execution order
+ * 6. Method overriding
+ * 7. Runtime polymorphism
+ */
+
+public class Week8_ExpenseTracker {
+
+    // ==========================================
+    // PARENT CLASS: PERSON
+    // ==========================================
+
+    public static class Person {
+
+        private String name;
+
+        // Parent constructor
+        public Person(String name) {
+
+            if (name == null || name.trim().isEmpty()) {
+                throw new IllegalArgumentException(
+                    "Person name cannot be empty."
+                );
+            }
+
+            this.name = name;
+
+            System.out.println("Person constructor is executed.");
+        }
+
+        // Getter
+        public String getName() {
+            return name;
+        }
+
+        // Parent behaviour method
+        public void describe() {
+            System.out.println("Name: " + name);
+        }
+    }
+
+
+    // ==========================================
+    // CHILD CLASS 1: STUDENT
+    // ==========================================
+
+    public static class Student extends Person {
+
+        private String studentId;
+
+        // Student constructor
+        public Student(String name, String studentId) {
+
+            super(name);
+
+            this.studentId = studentId;
+
+            System.out.println("Student constructor is executed.");
+        }
+
+        // Getter
+        public String getStudentId() {
+            return studentId;
+        }
+
+        // Method overriding
+        @Override
+        public void describe() {
+
+            System.out.println("\n----- Student Details -----");
+
+            super.describe();
+
+            System.out.println("Student ID: " + studentId);
+        }
+    }
+
+
+    // ==========================================
+    // CHILD CLASS 2: EMPLOYEE
+    // ==========================================
+
+    public static class Employee extends Person {
+
+        private String department;
+
+        // Employee constructor
+        public Employee(String name, String department) {
+
+            super(name);
+
+            this.department = department;
+
+            System.out.println("Employee constructor is executed.");
+        }
+
+        // Getter
+        public String getDepartment() {
+            return department;
+        }
+
+        // Method overriding
+        @Override
+        public void describe() {
+
+            System.out.println("\n----- Employee Details -----");
+
+            super.describe();
+
+            System.out.println("Department: " + department);
+        }
+    }
+
+
+    // ==========================================
+    // MAIN PROGRAM
+    // ==========================================
+
+    public static void main(String[] args) {
+
+        System.out.println("================================");
+        System.out.println("WEEK 8: INHERITANCE");
+        System.out.println("================================");
+
+
+        // --------------------------------------
+        // CREATING STUDENT OBJECT
+        // --------------------------------------
+
+        System.out.println("\nCreating Student object:");
+
+        Student student = new Student(
+            "Frank",
+            "CBU2024"
+        );
+
+
+        // --------------------------------------
+        // CREATING EMPLOYEE OBJECT
+        // --------------------------------------
+
+        System.out.println("\nCreating Employee object:");
+
+        Employee employee = new Employee(
+            "John",
+            "Finance"
+        );
+
+
+        // --------------------------------------
+        // DISPLAYING OBJECT INFORMATION
+        // --------------------------------------
+
+        System.out.println("\nDisplaying Person Information:");
+
+        student.describe();
+
+        employee.describe();
+
+
+        // --------------------------------------
+        // DEMONSTRATING POLYMORPHISM
+        // --------------------------------------
+
+        System.out.println("\n================================");
+        System.out.println("RUNTIME POLYMORPHISM");
+        System.out.println("================================");
+
+        Person person1 = new Student("Peter", "CBU2025");
+
+        Person person2 = new Employee("Mary", "ICT");
+
+        person1.describe();
+
+        person2.describe();
+
+
+        System.out.println("\nWeek 8 program completed successfully.");
+    }
+}
+
+/*
+ * WEEK 8: INHERITANCE AND CONSTRUCTOR EXECUTION ORDER
+ * -------------------------------------------------
+ * Parent class: Person
+ * Child classes: Student and Employee
+ *
+ * Concepts demonstrated:
+ * 1. Inheritance
+ * 2. Encapsulation
+ * 3. Constructors
+ * 4. Constructor chaining using super()
+ * 5. Constructor execution order
+ * 6. Method overriding
+ * 7. Runtime polymorphism
+ */
+
+public class Week8_ExpenseTracker {
+
+    // ==========================================
+    // PARENT CLASS: PERSON
+    // ==========================================
+
+    public static class Person {
+
+        private String name;
+
+        // Parent constructor
+        public Person(String name) {
+
+            if (name == null || name.trim().isEmpty()) {
+                throw new IllegalArgumentException(
+                    "Person name cannot be empty."
+                );
+            }
+
+            this.name = name;
+
+            System.out.println("Person constructor is executed.");
+        }
+
+        // Getter
+        public String getName() {
+            return name;
+        }
+
+        // Parent behaviour method
+        public void describe() {
+            System.out.println("Name: " + name);
+        }
+    }
+
+
+    // ==========================================
+    // CHILD CLASS 1: STUDENT
+    // ==========================================
+
+    public static class Student extends Person {
+
+        private String studentId;
+
+        // Student constructor
+        public Student(String name, String studentId) {
+
+            super(name);
+
+            this.studentId = studentId;
+
+            System.out.println("Student constructor is executed.");
+        }
+
+        // Getter
+        public String getStudentId() {
+            return studentId;
+        }
+
+        // Method overriding
+        @Override
+        public void describe() {
+
+            System.out.println("\n----- Student Details -----");
+
+            super.describe();
+
+            System.out.println("Student ID: " + studentId);
+        }
+    }
+
+
+    // ==========================================
+    // CHILD CLASS 2: EMPLOYEE
+    // ==========================================
+
+    public static class Employee extends Person {
+
+        private String department;
+
+        // Employee constructor
+        public Employee(String name, String department) {
+
+            super(name);
+
+            this.department = department;
+
+            System.out.println("Employee constructor is executed.");
+        }
+
+        // Getter
+        public String getDepartment() {
+            return department;
+        }
+
+        // Method overriding
+        @Override
+        public void describe() {
+
+            System.out.println("\n----- Employee Details -----");
+
+            super.describe();
+
+            System.out.println("Department: " + department);
+        }
+    }
+
+
+    // ==========================================
+    // MAIN PROGRAM
+    // ==========================================
+
+    public static void main(String[] args) {
+
+        System.out.println("================================");
+        System.out.println("WEEK 8: INHERITANCE");
+        System.out.println("================================");
+
+
+        // --------------------------------------
+        // CREATING STUDENT OBJECT
+        // --------------------------------------
+
+        System.out.println("\nCreating Student object:");
+
+        Student student = new Student(
+            "Frank",
+            "CBU2024"
+        );
+
+
+        // --------------------------------------
+        // CREATING EMPLOYEE OBJECT
+        // --------------------------------------
+
+        System.out.println("\nCreating Employee object:");
+
+        Employee employee = new Employee(
+            "John",
+            "Finance"
+        );
+
+
+        // --------------------------------------
+        // DISPLAYING OBJECT INFORMATION
+        // --------------------------------------
+
+        System.out.println("\nDisplaying Person Information:");
+
+        student.describe();
+
+        employee.describe();
+
+
+        // --------------------------------------
+        // DEMONSTRATING POLYMORPHISM
+        // --------------------------------------
+
+        System.out.println("\n================================");
+        System.out.println("RUNTIME POLYMORPHISM");
+        System.out.println("================================");
+
+        Person person1 = new Student("Peter", "CBU2025");
+
+        Person person2 = new Employee("Mary", "ICT");
+
+        person1.describe();
+
+        person2.describe();
+
+
+        System.out.println("\nWeek 8 program completed successfully.");
+    }
+}
