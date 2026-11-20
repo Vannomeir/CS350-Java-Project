@@ -1,0 +1,250 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+/*
+ * WEEK 7 - ENCAPSULATION AND CONSTRUCTORS
+ * Builds on Week 6 by:
+ *   - Encapsulation: fields are private, accessed only through getters/setters
+ *     (setters validate the data so bad values can't get in)
+ *   - Constructors: special methods that set up an object when it is created
+ *     (default, parameterized, overloaded, and constructor chaining with this(...))
+ */
+public class Week7 {
+
+    // CLASS: Expense (encapsulated, with constructors)
+    public static class Expense {
+
+        // ENCAPSULATION: private fields - cannot be touched directly from outside
+        private String name;
+        private double price;
+        private String category;
+
+        // CONSTRUCTOR 1: default (no arguments)
+        public Expense() {
+            this("Unnamed", 0.0, "General"); // constructor chaining
+        }
+
+        // CONSTRUCTOR 2: name and price only (overloaded)
+        public Expense(String name, double price) {
+            this(name, price, "General"); // reuses the full constructor
+        }
+
+        // CONSTRUCTOR 3: full parameterized constructor
+        public Expense(String name, double price, String category) {
+            setName(name);         // use setters so validation applies
+            setPrice(price);
+            setCategory(category);
+        }
+
+        // GETTERS (read access)
+        public String getName() {
+            return name;
+        }
+
+        public double getPrice() {
+            return price;
+        }
+
+        public String getCategory() {
+            return category;
+        }
+
+        // SETTERS (controlled write access with validation)
+        public void setName(String name) {
+            if (name == null || name.trim().isEmpty()) {
+                System.out.println("Invalid name. Using 'Unnamed'.");
+                this.name = "Unnamed";
+            } else {
+                this.name = name.trim();
+            }
+        }
+
+        public void setPrice(double price) {
+            if (price < 0) {
+                System.out.println("Price cannot be negative. Setting price to K0.0.");
+                this.price = 0.0;
+            } else {
+                this.price = price;
+            }
+        }
+
+        public void setCategory(String category) {
+            if (category == null || category.trim().isEmpty()) {
+                this.category = "General";
+            } else {
+                this.category = category.trim();
+            }
+        }
+
+        @Override
+        public String toString() {
+            return name + " (" + category + ") - K" + price;
+        }
+    }
+
+    // CLASS: Budget (encapsulated, with constructors)
+    public static class Budget {
+
+        private double income;
+        private ArrayList<Expense> expenses;
+
+        // Default constructor: no income yet, empty list
+        public Budget() {
+            this(0.0);
+        }
+
+        // Parameterized constructor
+        public Budget(double income) {
+            setIncome(income);
+            this.expenses = new ArrayList<>();
+        }
+
+        public double getIncome() {
+            return income;
+        }
+
+        public void setIncome(double income) {
+            if (income < 0) {
+                System.out.println("Income cannot be negative. Setting income to K0.0.");
+                this.income = 0.0;
+            } else {
+                this.income = income;
+            }
+        }
+
+        public void addExpense(Expense e) {
+            if (e != null) {
+                expenses.add(e);
+            }
+        }
+
+        // Returns a COPY so outside code cannot change the private list directly
+        public ArrayList<Expense> getExpenses() {
+            return new ArrayList<>(expenses);
+        }
+
+        public double getTotalExpenses() {
+            double total = 0.0;
+            for (Expense e : expenses) {
+                total += e.getPrice();
+            }
+            return total;
+        }
+
+        public double getBalance() {
+            return income - getTotalExpenses();
+        }
+
+        public void printSummary() {
+            System.out.println("\n----- Expense Summary -----");
+            System.out.println("Income: K" + income);
+            System.out.println("Total Expenses: K" + getTotalExpenses());
+            System.out.println("Balance: K" + getBalance());
+
+            System.out.println("\nIndividual Expenses:");
+            for (int i = 0; i < expenses.size(); i++) {
+                System.out.println("Expense " + (i + 1) + ": " + expenses.get(i));
+            }
+        }
+    }
+
+    // MAIN: menu-driven Expense Tracker using the encapsulated classes
+    public static void main(String[] args) {
+
+        Scanner input = new Scanner(System.in);
+        Budget budget = new Budget(); // default constructor
+
+        int choice;
+
+        do {
+            printMenu();
+            choice = readInt(input, "Enter your choice: ");
+
+            switch (choice) {
+                case 1:
+                    budget.setIncome(readDouble(input, "Enter your income: "));
+                    break;
+
+                case 2:
+                    System.out.print("Enter expense name: ");
+                    String name = input.nextLine();
+                    double price = readDouble(input, "Enter expense price: ");
+                    System.out.print("Enter category (press Enter to skip): ");
+                    String category = input.nextLine();
+
+                    // Parameterized constructor creates the object
+                    budget.addExpense(new Expense(name, price, category));
+                    System.out.println("Expense added successfully.");
+                    break;
+
+                case 3:
+                    budget.printSummary();
+                    break;
+
+                case 4:
+                    constructorDemo();
+                    break;
+
+                case 5:
+                    System.out.println("Exiting the Expense Tracker. Goodbye!");
+                    break;
+
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+
+        } while (choice != 5);
+
+        input.close();
+    }
+
+    public static void printMenu() {
+        System.out.println("\nExpense Tracker Menu:");
+        System.out.println("1. Enter Income");
+        System.out.println("2. Add Expense");
+        System.out.println("3. View Summary");
+        System.out.println("4. Constructor & Encapsulation Demo");
+        System.out.println("5. Exit");
+    }
+
+    // Demonstrates each constructor and the validation in the setters
+    public static void constructorDemo() {
+        System.out.println("\n--- Constructor & Encapsulation Demo ---");
+
+        Expense e1 = new Expense();                          // default constructor
+        Expense e2 = new Expense("Airtime", 50.0);           // 2-argument constructor
+        Expense e3 = new Expense("Rent", 1500.0, "Housing"); // full constructor
+
+        System.out.println("Default constructor : " + e1);
+        System.out.println("Two-arg constructor : " + e2);
+        System.out.println("Full constructor    : " + e3);
+
+        // Encapsulation: e3.price = 10;  <-- would NOT compile (price is private)
+        e3.setPrice(1600.0);                  // allowed through the setter
+        System.out.println("After setPrice(1600): " + e3.getPrice());
+
+        e3.setPrice(-20.0);                   // validation rejects this
+        System.out.println("After setPrice(-20) : " + e3.getPrice());
+    }
+
+    // Safe input helpers (read whole lines so no leftover newline problems)
+    public static int readInt(Scanner input, String prompt) {
+        System.out.print(prompt);
+        try {
+            return Integer.parseInt(input.nextLine().trim());
+        } catch (NumberFormatException ex) {
+            return -1; // triggers "Invalid choice"
+        }
+    }
+
+    public static double readDouble(Scanner input, String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            try {
+                return Double.parseDouble(input.nextLine().trim());
+            } catch (NumberFormatException ex) {
+                System.out.println("Please enter a valid number.");
+            }
+        }
+    }
+}
