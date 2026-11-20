@@ -11,22 +11,15 @@ import java.util.Scanner;
  *     implementations dynamically at runtime
  */
 public class Week9 {
-
-    // =========================================================================
-    // 1. INTERFACES: Capability contracts (Week 9 Abstraction)
-    // =========================================================================
     public interface Exportable {
         String toCsvRow();
     }
 
     public interface Taxable {
-        double VAT_RATE = 0.16; // 16% standard VAT rate (implicitly public static final)
+        double VAT_RATE = 0.16; 
         double calculateTax();
     }
 
-    // =========================================================================
-    // 2. ABSTRACT SUPERCLASS: Expense (Cannot do 'new Expense(...)')
-    // =========================================================================
     public static abstract class Expense implements Exportable {
 
         private String name;
@@ -99,10 +92,6 @@ public class Week9 {
             return describe();
         }
     }
-
-    // =========================================================================
-    // 3. CONCRETE SUBCLASS A: StandardExpense (IS-A Expense, implements Taxable)
-    // =========================================================================
     public static class StandardExpense extends Expense implements Taxable {
 
         private boolean includesVat;
@@ -128,9 +117,6 @@ public class Week9 {
         }
     }
 
-    // =========================================================================
-    // 4. CONCRETE SUBCLASS B: RecurringExpense (IS-A Expense)
-    // =========================================================================
     public static class RecurringExpense extends Expense {
 
         private String frequency;
@@ -161,9 +147,6 @@ public class Week9 {
         }
     }
 
-    // =========================================================================
-    // 5. CONCRETE SUBCLASS C: DiscountedExpense (IS-A Expense)
-    // =========================================================================
     public static class DiscountedExpense extends Expense {
 
         private double discountPercent;
@@ -194,9 +177,6 @@ public class Week9 {
         }
     }
 
-    // =========================================================================
-    // 6. POLYMORPHIC CONTAINER: Budget (HAS-A list of abstract Expense references)
-    // =========================================================================
     public static class Budget {
 
         private double income;
@@ -278,9 +258,6 @@ public class Week9 {
         }
     }
 
-    // =========================================================================
-    // 7. MAIN: Menu-driven Expense Tracker
-    // =========================================================================
     public static void main(String[] args) {
 
         Scanner input = new Scanner(System.in);
